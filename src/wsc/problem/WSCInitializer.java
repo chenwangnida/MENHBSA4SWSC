@@ -96,10 +96,10 @@ public class WSCInitializer {
 	public static String logName;
 
 	// evaluation settings
-	// public static int evalMax = 6000;
-	// public static int evalStep = 200;
-	// public static int evalCounter = 0;
-	//
+	public static int evalMax = 20000;
+	public static int evalStep = 200;
+	public static int evalCounter = 0;
+
 	// public static int NHMIteration = 0;
 	public static int NHMCounter = 0;
 
