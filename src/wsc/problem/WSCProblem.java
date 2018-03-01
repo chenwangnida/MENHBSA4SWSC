@@ -53,6 +53,7 @@ public class WSCProblem {
 			List<Integer> usedSerQueue = new ArrayList<Integer>();
 
 			// graph-based representation
+			//fullSerQueue is initially empty, but updated with the services used in the generated graph
 			ServiceGraph graph = graGenerator.generateGraph(fullSerQueue);
 
 			// create a queue of services according to breath first search
