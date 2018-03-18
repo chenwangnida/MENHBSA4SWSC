@@ -289,18 +289,22 @@ public class LocalSearch {
 
 		for (int i = 0; i < population.size(); i++) {
 			WSCIndividual indi = population.get(i);
-			if (indi.getFitness() >= (population.get(0).fitness + fitnessSize * 3)) {
-				partition4 = i;
-			} else if (indi.getFitness() >= (population.get(0).fitness + fitnessSize * 2)) {
-				partition3 = i;
-			} else if (indi.getFitness() <= (population.get(0).fitness + fitnessSize)) {
-				partition2 = i;
-			} else {
+			if (indi.getFitness() >= (population.get(0).fitness - fitnessSize)) {
 				partition1 = i;
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 2)) {
+				partition2 = i;
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 3)) {
+				partition3 = i;
+			} else {
+				partition4 = i;
 			}
 		}
-
-		solutions4LS.add(population.get(random.nextInt(partition1 + 1)));
+		
+		//need to fix the bug
+		
+		if (partition1 > 0) {
+			solutions4LS.add(population.get(random.nextInt(partition1 + 1)));
+		}
 		solutions4LS.add(population.get(partition1 + random.nextInt(partition2 - partition1 + 1)));
 		solutions4LS.add(population.get(partition2 + random.nextInt(partition3 - partition2 + 1)));
 		solutions4LS.add(population.get(partition3 + random.nextInt(partition4 - partition3 + 1)));
