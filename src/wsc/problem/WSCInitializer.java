@@ -47,6 +47,7 @@ public class WSCInitializer {
 	public static int noOfls = 0;
 	public static double Pls = 0.1; // probability of local search
 	public static int numOfLS = 30; // the size of neighboring space
+	public static int numOfLS4Group = 18;
 	public static double Pm = 0.1; // probability of local search
 
 	// Constants with of order of QoS attributes
