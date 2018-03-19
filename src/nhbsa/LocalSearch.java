@@ -484,6 +484,13 @@ public class LocalSearch {
 		}
 		
 		for (WSCIndividual indi : solutions4LS) {
+			
+			
+			double adaptiveLength = (WSCInitializer.MAX_NUM_ITERATIONS - 1 - WSCInitializer.NHMCounter) * (indi.getSplitPosition() - 1  - 1)
+					/ (WSCInitializer.MAX_NUM_ITERATIONS - 1) + 1;
+			
+			double lastPos = -1;
+
 
 			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
 
@@ -504,6 +511,17 @@ public class LocalSearch {
 					serQueue_temp.add(ser);
 
 				}
+				
+				
+				//obtain last start positions for valid length for LS, position 0 is always included
+				if(split>= adaptiveLength) {
+					lastPos = split - adaptiveLength;
+				}
+				
+				//obtain a rang from index 0 to lastPos
+				
+				
+				
 
 				if (split == 0) {
 					System.out.println(split);
