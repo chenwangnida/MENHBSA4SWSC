@@ -518,7 +518,9 @@ public class LocalSearch {
 					lastPos = split - adaptiveLength;
 				}
 				
-				//obtain a rang from index 0 to lastPos
+				//obtain index 0 to lastPos for the startpos of a range
+				
+				//random obtain the startpos from the range and generate parts for LS
 				
 				
 				
