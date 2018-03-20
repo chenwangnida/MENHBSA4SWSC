@@ -53,7 +53,8 @@ public class WSCProblem {
 			List<Integer> usedSerQueue = new ArrayList<Integer>();
 
 			// graph-based representation
-			//fullSerQueue is initially empty, but updated with the services used in the generated graph
+			// fullSerQueue is initially empty, but updated with the services used in the
+			// generated graph
 			ServiceGraph graph = graGenerator.generateGraph(fullSerQueue);
 
 			// create a queue of services according to breath first search
@@ -82,7 +83,7 @@ public class WSCProblem {
 			// add a local search
 			LocalSearch ls = new LocalSearch();
 			// ls.swapChunk(population, WSCInitializer.random, graGenerator, eval);
-			ls.swapChunk4GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			ls.swapChunk5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
 
 			// add a mutation
 			// Mutation mutatation = new Mutation();
@@ -105,11 +106,12 @@ public class WSCProblem {
 
 			// entry to NHBSA
 
-			// NHBSA nhbsa = new NHBSA(WSCInitializer.dimension_size,
-			// WSCInitializer.dimension_size);
-			// select first half population into matrix
+			// select first half population into matrix and archive
+			List<WSCIndividual> archive = new ArrayList<WSCIndividual>();
+
 			int[][] m_generation = new int[WSCInitializer.population_size][WSCInitializer.dimension_size];
 			for (int m = 0; m < WSCInitializer.population_size; m++) {
+				archive.add(population.get(m));
 				for (int n = 0; n < WSCInitializer.dimension_size; n++) {
 					m_generation[m][n] = population.get(m).serQueue.get(n);
 				}
@@ -119,11 +121,15 @@ public class WSCProblem {
 			nhbsa.setM_L(WSCInitializer.dimension_size);
 			nhbsa.setM_N(WSCInitializer.population_size);
 
-			List<int[]> pop_updated = nhbsa.sampling4NHBSA(WSCInitializer.population_size * 2, WSCInitializer.random);
+			// sample only half number of pop
+			List<int[]> pop_updated = nhbsa.sampling4NHBSA(WSCInitializer.population_size, WSCInitializer.random);
 
-			// update the population
 			population.clear();
 
+			// add another half number of pop to population
+			population.addAll(archive);
+
+			// update the population with pop_updated
 			for (int m = 0; m < pop_updated.size(); m++) {
 				int[] id_updated = pop_updated.get(m);
 				WSCIndividual indi_updated = new WSCIndividual();

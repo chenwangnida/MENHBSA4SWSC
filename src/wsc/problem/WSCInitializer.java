@@ -136,7 +136,7 @@ public class WSCInitializer {
 			ontologyDAG = createOntologyDAG(initialWSCPool);
 
 			// Filter web services in repository
-			initialWSCPool.allRelevantService4Layers(taskInput, taskOutput);
+			initialWSCPool.allRelevantService(taskInput, taskOutput);
 
 		} catch (JAXBException | IOException e) {
 			e.printStackTrace();
