@@ -30,7 +30,7 @@ public class InitialWSCPool {
 	private final HashSet<String> outputSet = new HashSet<String>();
 	private final SemanticsPool semanticsPool;
 	private final List<Service> serviceSequence = new LinkedList<Service>();
-	
+
 	private Map<Integer, List<Service>> layers = new HashMap<Integer, List<Service>>();
 
 	// a vector based representation
@@ -345,9 +345,8 @@ public class InitialWSCPool {
 
 			numLayer++;
 			layers.put(numLayer, services4Layer);
+			services4Layer.forEach(service -> this.getServiceSequence().add(service));
 
-			// obtain all the relevant service from map value
-			layers.values().forEach(layer -> serviceSequence.addAll(layer));
 		} while (true);
 	}
 

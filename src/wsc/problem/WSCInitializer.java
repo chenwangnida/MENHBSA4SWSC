@@ -151,14 +151,15 @@ public class WSCInitializer {
 		semanticMatrix = HashBasedTable.create();
 		createSemanticMatrix();
 
+		System.out.println("All service: "
+				+ (initialWSCPool.getSwsPool().getServiceList().size() + initialWSCPool.getServiceSequence().size())
+				+ "; all relevant service: " + initialWSCPool.getServiceSequence().size() + "; semanticMatrix: "
+				+ semanticMatrix.size());
+
 		MapServiceToQoS(initialWSCPool.getServiceSequence());
 
 		calculateNormalisationBounds(initialWSCPool.getServiceSequence(),
 				initialWSCPool.getSemanticsPool().getOwlInstHashMap().size());
-
-		System.out.println(
-				"All service: " + initialWSCPool.getSwsPool().getServiceList().size() + "; all relevant service: "
-						+ initialWSCPool.getServiceSequence().size() + "; semanticMatrix: " + semanticMatrix.size());
 
 	}
 
