@@ -30,6 +30,8 @@ public class InitialWSCPool {
 	private final HashSet<String> outputSet = new HashSet<String>();
 	private final SemanticsPool semanticsPool;
 	private final List<Service> serviceSequence = new LinkedList<Service>();
+	
+	private Map<Integer, List<Service>> layers = new HashMap<Integer, List<Service>>();
 
 	// a vector based representation
 	// public static Set<Service> usedSerQueue = new HashSet<Service>();
@@ -65,6 +67,14 @@ public class InitialWSCPool {
 
 	public static void setServiceCandidates(List<Service> serviceCandidates) {
 		InitialWSCPool.serviceCandidates = serviceCandidates;
+	}
+
+	public Map<Integer, List<Service>> getLayers() {
+		return layers;
+	}
+
+	public void setLayers(Map<Integer, List<Service>> layers) {
+		this.layers = layers;
 	}
 
 	/**
@@ -314,7 +324,8 @@ public class InitialWSCPool {
 	}
 
 	/**
-	 * given a task associated to find a set of services associated with different layers
+	 * given a task associated to find a set of services associated with different
+	 * layers
 	 *
 	 * @param giveninput
 	 *
@@ -322,15 +333,21 @@ public class InitialWSCPool {
 	 *
 	 */
 	public void allRelevantService4Layers(List input, List output) throws JAXBException, IOException {
+		int numLayer = 0;
+
 		this.outputSet.addAll(input);
 		do {
+
 			List<Service> services4Layer = this.swsPool.findPossibleService4Layers(this.outputSet);
 			if (services4Layer.size() == 0) {
 				return;
 			}
-			Map<Integer, List<Service>> layers  = new HashMap<Integer, List<Service>>();
-			layers.put(key, services4Layer);
-			serviceSequence.add(service);
+
+			numLayer++;
+			layers.put(numLayer, services4Layer);
+
+			// obtain all the relevant service from map value
+			layers.values().forEach(layer -> serviceSequence.addAll(layer));
 		} while (true);
 	}
 
