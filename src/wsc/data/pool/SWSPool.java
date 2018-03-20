@@ -25,10 +25,9 @@ public class SWSPool {
 
 	private List<Service> serviceList = new LinkedList<Service>();
 	private SemanticsPool semantics;
-	
-	
-//	private final Map<String, Service> graphOutputSetMap = new HashMap<String, Service>();
 
+	// private final Map<String, Service> graphOutputSetMap = new HashMap<String,
+	// Service>();
 
 	public List<Service> getServiceList() {
 		return serviceList;
@@ -46,7 +45,6 @@ public class SWSPool {
 		this.semantics = semantics;
 	}
 
-
 	/**
 	 * Semantic web service pool initialization
 	 *
@@ -56,27 +54,29 @@ public class SWSPool {
 	 *
 	 * @return SemanticWebServicePool
 	 */
-//	public static SWSPool parseXML(SemanticsPool semantics, String serviceFilePath)
-//			throws FileNotFoundException, JAXBException {
-//		SWSPool swsp = new SWSPool();
-//		swsp.semantics = semantics;
-//		List<double[]> list = initialQoSfromSLA("qos.xml");
-//
-//		Definitions def = Definitions.parseXML(serviceFilePath);
-//		for (int i = 0; i < def.getSemExtension().getSemMessageExtList().size(); i += 2) {
-//			swsp.serviceList.add(Service.initialServicefromMECE(def.getSemExtension().getSemMessageExtList().get(i),
-//					def.getSemExtension().getSemMessageExtList().get(i + 1)));
-//		}
-//
-//		// manually add QoS attributes
-//		for (int i = 0; i < list.size(); i++) {
-//			swsp.qosServiceMap.put(swsp.serviceList.get(i).getServiceID(), list.get(i));
-//			swsp.serviceList.get(i).setQos(list.get(i));
-//		}
-//
-//		System.out.println("No.of Service:" + swsp.serviceList.size());
-//		return swsp;
-//	}
+	// public static SWSPool parseXML(SemanticsPool semantics, String
+	// serviceFilePath)
+	// throws FileNotFoundException, JAXBException {
+	// SWSPool swsp = new SWSPool();
+	// swsp.semantics = semantics;
+	// List<double[]> list = initialQoSfromSLA("qos.xml");
+	//
+	// Definitions def = Definitions.parseXML(serviceFilePath);
+	// for (int i = 0; i < def.getSemExtension().getSemMessageExtList().size(); i +=
+	// 2) {
+	// swsp.serviceList.add(Service.initialServicefromMECE(def.getSemExtension().getSemMessageExtList().get(i),
+	// def.getSemExtension().getSemMessageExtList().get(i + 1)));
+	// }
+	//
+	// // manually add QoS attributes
+	// for (int i = 0; i < list.size(); i++) {
+	// swsp.qosServiceMap.put(swsp.serviceList.get(i).getServiceID(), list.get(i));
+	// swsp.serviceList.get(i).setQos(list.get(i));
+	// }
+	//
+	// System.out.println("No.of Service:" + swsp.serviceList.size());
+	// return swsp;
+	// }
 
 	public static SWSPool parseWSCServiceFile(SemanticsPool semantics, String fileName) {
 
@@ -112,7 +112,7 @@ public class SWSPool {
 				for (int j = 0; j < inputNodes.getLength(); j++) {
 					org.w3c.dom.Node in = inputNodes.item(j);
 					Element e = (Element) in;
-					ServiceInput serviceInput= new ServiceInput(e.getAttribute("name"),false);
+					ServiceInput serviceInput = new ServiceInput(e.getAttribute("name"), false);
 					inputs.add(serviceInput);
 				}
 
@@ -122,7 +122,7 @@ public class SWSPool {
 				for (int j = 0; j < outputNodes.getLength(); j++) {
 					org.w3c.dom.Node out = outputNodes.item(j);
 					Element e = (Element) out;
-					ServiceOutput serviceOutput = new ServiceOutput(e.getAttribute("name"),false);
+					ServiceOutput serviceOutput = new ServiceOutput(e.getAttribute("name"), false);
 					outputs.add(serviceOutput);
 				}
 
@@ -145,8 +145,8 @@ public class SWSPool {
 	}
 
 	/**
-	 * find a single service that can be applied now and update the output list
-	 * and delete the service
+	 * find a single service that can be applied now and update the output list and
+	 * delete the service
 	 *
 	 * @param inputSet
 	 */
@@ -161,7 +161,7 @@ public class SWSPool {
 			}
 		}
 		if (foundServiceIndex == -1) {
-//			System.out.println("no matching for inputSet");
+			// System.out.println("no matching for inputSet");
 			return null;
 		}
 		Service service = this.serviceList.get(foundServiceIndex);
@@ -176,13 +176,46 @@ public class SWSPool {
 	}
 
 	/**
-	 * find a single service that can be applied now and update the output list
-	 * and delete the service
+	 * find a single service that can be applied now and update the output list and
+	 * delete the service
+	 *
+	 * @param inputSet
+	 */
+	public List<Service> findPossibleService4Layers(HashSet<String> inputSet) {
+
+		List<Service> services4Layer = new ArrayList<Service>();
+
+		for (int i = 0; i < this.serviceList.size(); i++) {
+			Service service = this.serviceList.get(i);
+
+			if (service.searchServiceMatchFromInputSet(this.semantics, inputSet)) {
+				services4Layer.add(service);
+			}
+		}
+
+		this.serviceList.removeAll(services4Layer);
+
+		for (Service service : services4Layer) {
+			for (ServiceOutput output : service.getOutputList()) {
+
+				if (!inputSet.contains(output.getOutput())) {
+					inputSet.add(output.getOutput());
+				}
+			}
+		}
+
+		return services4Layer;
+	}
+
+	/**
+	 * find a single service that can be applied now and update the output list and
+	 * delete the service
 	 *
 	 * @param graphOutputList
 	 */
 	public Service createGraphService(List<ServiceOutput> graphOutputs, List<Service> serviceCandidates,
-			SemanticsPool semanticsPool, DirectedGraph<String, ServiceEdge> directedGraph, Map<String, Service> graphOutputListMap) {
+			SemanticsPool semanticsPool, DirectedGraph<String, ServiceEdge> directedGraph,
+			Map<String, Service> graphOutputListMap) {
 		int foundServiceIndex = -1;
 
 		for (int i = 0; i < serviceCandidates.size(); i++) {
@@ -201,20 +234,20 @@ public class SWSPool {
 		serviceCandidates.remove(service);
 		// add found service outputs to inputSet
 		for (ServiceOutput output : service.getOutputList()) {
-//			if (!graphOutputList.contains(output.getOutput())) {
-				graphOutputs.add(output);
-//				graphOutputList.add(output.getOutput());
-				// output mapped back to service
-				graphOutputListMap.put(output.getOutput(), service);
-//			}
+			// if (!graphOutputList.contains(output.getOutput())) {
+			graphOutputs.add(output);
+			// graphOutputList.add(output.getOutput());
+			// output mapped back to service
+			graphOutputListMap.put(output.getOutput(), service);
+			// }
 		}
-		
-		
+
 		return service;
 	}
 
 	public Service createGraphService4Mutation(List<ServiceOutput> graphOutputs, List<Service> serviceCandidates,
-			SemanticsPool semanticsPool, DirectedGraph<String, ServiceEdge> directedGraph, Map<String, Service> graphOutputListMap, List<String> ioNodeInputs) {
+			SemanticsPool semanticsPool, DirectedGraph<String, ServiceEdge> directedGraph,
+			Map<String, Service> graphOutputListMap, List<String> ioNodeInputs) {
 		int foundServiceIndex = -1;
 
 		for (int i = 0; i < serviceCandidates.size(); i++) {
@@ -233,13 +266,13 @@ public class SWSPool {
 		serviceCandidates.remove(service);
 		// add found service outputs to inputSet
 		for (ServiceOutput output : service.getOutputList()) {
-//			if (!graphOutputList.contains(output.getOutput())) {
-				graphOutputs.add(output);
-//				graphOutputList.add(output.getOutput());
-				// output mapped back to service
-				graphOutputListMap.put(output.getOutput(), service);
-			}
-//		}
+			// if (!graphOutputList.contains(output.getOutput())) {
+			graphOutputs.add(output);
+			// graphOutputList.add(output.getOutput());
+			// output mapped back to service
+			graphOutputListMap.put(output.getOutput(), service);
+		}
+		// }
 		return service;
 	}
 

@@ -313,6 +313,27 @@ public class InitialWSCPool {
 		} while (true);
 	}
 
+	/**
+	 * given a task associated to find a set of services associated with different layers
+	 *
+	 * @param giveninput
+	 *
+	 * @param givenoutput
+	 *
+	 */
+	public void allRelevantService4Layers(List input, List output) throws JAXBException, IOException {
+		this.outputSet.addAll(input);
+		do {
+			List<Service> services4Layer = this.swsPool.findPossibleService4Layers(this.outputSet);
+			if (services4Layer.size() == 0) {
+				return;
+			}
+			Map<Integer, List<Service>> layers  = new HashMap<Integer, List<Service>>();
+			layers.put(key, services4Layer);
+			serviceSequence.add(service);
+		} while (true);
+	}
+
 	public void createGraphService(List<String> taskInput, List<String> taskOutput,
 			DirectedGraph<String, ServiceEdge> directedGraph) {
 		graphOutputs.clear();
