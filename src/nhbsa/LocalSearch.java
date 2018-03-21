@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import wsc.InitialWSCPool;
 import wsc.data.pool.Service;
 import wsc.graph.ServiceGraph;
@@ -15,13 +18,10 @@ import wsc.problem.WSCInitializer;
 
 public class LocalSearch {
 
-	// local search for Top 1 and 4 from groups by fitness distribution with 18
+	// local search for random one-point swap for Top 1 and 4 from groups by fitness distribution with 18
 	// neighbors
-	public List<WSCIndividual> swapOne4GroupByFit(List<WSCIndividual> population, Random random, WSCGraph graGenerator,
+	public List<WSCIndividual> randomSwapOne4GroupByFit(List<WSCIndividual> population, Random random, WSCGraph graGenerator,
 			WSCEvaluation eval) {
-
-		// swap
-
 		int split = 0;
 
 		Collections.sort(population);
@@ -67,21 +67,20 @@ public class LocalSearch {
 			solutions4LS.add(partition4.get(random.nextInt(partition4.size())));
 		}
 
-		for (WSCIndividual indi : solutions4LS) {
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
+		
+		
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
 
+			split = indi.getSplitPosition();
 			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
 
-			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS4Group; nOfls++) {
+			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS; nOfls++) {
 
 				// obtain the split position of the individual
-				split = indi.getSplitPosition();
 
 				WSCIndividual indi_temp = new WSCIndividual();
 				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -89,46 +88,21 @@ public class LocalSearch {
 
 				}
 
-				if (split == 0) {
-					System.out.println(split);
-				}
+				indi_temp.serQueue = serQueue_temp;
 
 				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
 
-				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
-																							// split(inclusive)
+				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between split(inclusive)
 																							// and
 																							// itemsize
 				// (exclusive)
 
-				// initial chunks for the individual
-				for (int i = 0; i < WSCInitializer.dimension_size; i++) {
+				Integer item_a = indi_temp.serQueue.get(swap_a);
+				Integer item_b = indi_temp.serQueue.get(swap_b);
+				Integer item_temp = new Integer(item_a);
 
-					if (i < swap_a) {
-						chunk1_temp.add(serQueue_temp.get(i));
-					}
-
-					if ((i >= swap_a) && (i < split)) {
-						chunk2_temp.add(serQueue_temp.get(i));
-					}
-
-					if ((i >= split) && (i < swap_b)) {
-						chunk3_temp.add(serQueue_temp.get(i));
-					}
-
-					if (i >= swap_b) {
-						chunk4_temp.add(serQueue_temp.get(i));
-					}
-
-				}
-
-				// a chunk from swap_a to split (exclusive)
-				serQueue_temp.clear();
-				// swap chunk2 and chunk4
-				serQueue_temp.addAll(chunk1_temp);
-				serQueue_temp.addAll(chunk4_temp);
-				serQueue_temp.addAll(chunk3_temp);
-				serQueue_temp.addAll(chunk2_temp);
+				indi_temp.serQueue.set(swap_a, item_b);
+				indi_temp.serQueue.set(swap_b, item_temp);
 
 				indi_temp.serQueue = serQueue_temp;
 
@@ -173,7 +147,12 @@ public class LocalSearch {
 			// if the best of neighbour solutions is better than the parent
 
 			if (indi_neigbouring.get(0).fitness > indi.fitness) {
-				population.set(population.indexOf(indi), indi_neigbouring.get(0));
+				
+				int index = population.indexOf(indi);
+				WSCIndividual bestNegigboour = indi_neigbouring.get(0);
+				population.set(index, bestNegigboour);
+				
+//				population.set(population.indexOf(indi), indi_neigbouring.get(0));
 			}
 
 		}
@@ -482,8 +461,11 @@ public class LocalSearch {
 		if (partition4.size() != 0) {
 			solutions4LS.add(partition4.get(random.nextInt(partition4.size())));
 		}
+		
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
 
-		for (WSCIndividual indi : solutions4LS) {
+
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
 
 			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
 
@@ -656,11 +638,14 @@ public class LocalSearch {
 			solutions4LS.add(partition5.get(random.nextInt(partition5.size())));
 		}
 
-		for (WSCIndividual indi : solutions4LS) {
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
+
+		
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
 
 			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
 
-			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS; nOfls++) {
+			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS5Group; nOfls++) {
 
 				// obtain the split position of the individual
 				split = indi.getSplitPosition();
@@ -822,7 +807,10 @@ public class LocalSearch {
 			solutions4LS.add(partition4.get(random.nextInt(partition4.size())));
 		}
 
-		for (WSCIndividual indi : solutions4LS) {
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
+
+		
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
 
 			double adaptiveLength = (WSCInitializer.MAX_NUM_ITERATIONS - 1 - WSCInitializer.NHMCounter)
 					* (indi.getSplitPosition() - 1 - 1) / (WSCInitializer.MAX_NUM_ITERATIONS - 1) + 1;
