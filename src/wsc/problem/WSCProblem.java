@@ -4,15 +4,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import java.util.List;
 
-import chart.LineChart;
 import nhbsa.LocalSearch;
-import nhbsa.Mutation;
-//import nhbsa.LocalSearch;
 import nhbsa.NHBSA;
 import wsc.InitialWSCPool;
 import wsc.data.pool.Service;
@@ -83,7 +79,7 @@ public class WSCProblem {
 			// add a local search
 			LocalSearch ls = new LocalSearch();
 			// ls.swapChunk(population, WSCInitializer.random, graGenerator, eval);
-			ls.swapChunk5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			ls.randomSwapOne5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
 
 			// add a mutation
 			// Mutation mutatation = new Mutation();
