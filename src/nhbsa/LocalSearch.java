@@ -18,8 +18,8 @@ import wsc.problem.WSCInitializer;
 
 public class LocalSearch {
 
-	// local search for random one-point swap for Top 1 and 4 from groups by fitness
-	// distribution with 18
+	// local search for random one-point swap for Top 1 and 5 from groups by fitness
+	// distribution with 20
 	// neighbors
 	public List<WSCIndividual> randomSwapOne5GroupByFit(List<WSCIndividual> population, Random random,
 			WSCGraph graGenerator, WSCEvaluation eval) {
@@ -752,7 +752,7 @@ public class LocalSearch {
 		return population;
 	}
 
-	// local search for Top 1 and 4 from groups by fitness distribution with 18
+	// local search for Top 1 and 5 from groups by fitness distribution with 20
 	// neighbors
 	public List<WSCIndividual> adaptiveSwapChunk4GroupByFit(List<WSCIndividual> population, Random random,
 			WSCGraph graGenerator, WSCEvaluation eval) {
@@ -767,12 +767,14 @@ public class LocalSearch {
 		// obtain individuals for selection
 		solutions4LS.add(population.get(0));
 
-		final double fitnessSize = (population.get(0).fitness - population.get(population.size() - 1).fitness) / 4;
+		final double fitnessSize = (population.get(0).fitness - population.get(population.size() - 1).fitness) / 5;
 
 		List<WSCIndividual> partition1 = new ArrayList<WSCIndividual>();
 		List<WSCIndividual> partition2 = new ArrayList<WSCIndividual>();
 		List<WSCIndividual> partition3 = new ArrayList<WSCIndividual>();
 		List<WSCIndividual> partition4 = new ArrayList<WSCIndividual>();
+		List<WSCIndividual> partition5 = new ArrayList<WSCIndividual>();
+
 
 		for (int i = 0; i < population.size(); i++) {
 			WSCIndividual indi = population.get(i);
@@ -782,8 +784,10 @@ public class LocalSearch {
 				partition2.add(population.get(i));
 			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 3)) {
 				partition3.add(population.get(i));
-			} else {
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 4)) {
 				partition4.add(population.get(i));
+			} else {
+				partition5.add(population.get(i));
 			}
 		}
 
@@ -803,6 +807,11 @@ public class LocalSearch {
 		if (partition4.size() != 0) {
 			solutions4LS.add(partition4.get(random.nextInt(partition4.size())));
 		}
+		
+		if (partition5.size() != 0) {
+			solutions4LS.add(partition5.get(random.nextInt(partition5.size())));
+		}
+
 
 		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
 
