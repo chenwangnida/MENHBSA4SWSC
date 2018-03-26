@@ -92,6 +92,7 @@ public class WSCInitializer {
 	public static Map<String, Service> serviceMap = new HashMap<String, Service>();
 	public static Map<Integer, Service> Index2ServiceMap = new HashMap<Integer, Service>();
 	public static BiMap<Integer, String> serviceIndexBiMap = HashBiMap.create();
+	public static Map<Integer, List<Integer>> layers4SerIndex = new HashMap<Integer, List<Integer>>();
 
 	public static Table<String, String, Double> semanticMatrix;
 
@@ -159,10 +160,21 @@ public class WSCInitializer {
 				+ semanticMatrix.size());
 
 		MapServiceToQoS(initialWSCPool.getServiceSequence());
+		MapLayerSer2LayerIndex(initialWSCPool.getLayers());
 
 		calculateNormalisationBounds(initialWSCPool.getServiceSequence(),
 				initialWSCPool.getSemanticsPool().getOwlInstHashMap().size());
 
+	}
+
+	private void MapLayerSer2LayerIndex(Map<Integer, List<Service>> layers) {
+		for (Integer mapId : layers.keySet()) {
+			List<Integer> serIndex4Layer = new ArrayList<Integer>();
+			for (Service ser : layers.get(mapId)) {
+				serIndex4Layer.add(serviceIndexBiMap.inverse().get(ser.getServiceID()));
+			}
+			layers4SerIndex.put(mapId, serIndex4Layer);
+		}
 	}
 
 	/**

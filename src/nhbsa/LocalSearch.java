@@ -240,7 +240,7 @@ public class LocalSearch {
 				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
 																		// Index
 																		// arrayList
-				Set<Service> unused_ser = new HashSet<Service>();
+				Set<Integer> unused_ser = new HashSet<Integer>();
 
 				// deep clone the services into a service queue for indi_temp
 				for (int index = 0; index < indi.serQueue.size(); index++) {
@@ -248,7 +248,7 @@ public class LocalSearch {
 					serQueue_temp.add(ser);
 					// obtain unused service set
 					if (index >= split) {
-						unused_ser.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(index)));
+						unused_ser.add(indi.serQueue.get(index));
 					}
 				}
 
@@ -262,19 +262,15 @@ public class LocalSearch {
 				int swap_b = -1;
 				Integer item_b = -1;
 
-				// obtain random selected service of index swap_a
-				Service swap_ser_a = WSCInitializer.Index2ServiceMap.get(serQueue_temp.get(swap_a));
-
 				// obtain services in the same layer of the selected service
 
-				for (List<Service> ser_lay : InitialWSCPool.getLayers().values()) {
-					if (ser_lay.contains(swap_ser_a)) {
+				for (List<Integer> ser_lay : WSCInitializer.layers4SerIndex.values()) {
+					if (ser_lay.contains(item_a)) {
 						// obtain an intersection of services in the layer and
 						// unused list
-						List<Service> swap_b_list = Lists
+						List<Integer> swap_b_list = Lists
 								.newArrayList(Sets.intersection(Sets.newHashSet(ser_lay), unused_ser));
-						Service swap_ser_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
-						item_b = WSCInitializer.serviceIndexBiMap.inverse().get(swap_ser_b.getServiceID());
+						item_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
 						swap_b = indi_temp.serQueue.indexOf(item_b);
 						break;
 					}
