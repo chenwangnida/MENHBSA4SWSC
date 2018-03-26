@@ -261,6 +261,7 @@ public class LocalSearch {
 				// initial swap_b for index of list, item_b for service index
 				int swap_b = -1;
 				Integer item_b = -1;
+				int continue4Swap = 0;
 
 				// obtain services in the same layer of the selected service
 
@@ -270,53 +271,59 @@ public class LocalSearch {
 						// unused list
 						List<Integer> swap_b_list = Lists
 								.newArrayList(Sets.intersection(Sets.newHashSet(ser_lay), unused_ser));
-						item_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
-						swap_b = indi_temp.serQueue.indexOf(item_b);
+						if (swap_b_list.size() > 0) {
+							continue4Swap = 1;
+							item_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
+							swap_b = indi_temp.serQueue.indexOf(item_b);
+						}
 						break;
 					}
 				}
 
-				Integer item_temp = new Integer(item_a);
+				if (continue4Swap == 1) {
 
-				indi_temp.serQueue.set(swap_a, item_b);
-				indi_temp.serQueue.set(swap_b, item_temp);
+					Integer item_temp = new Integer(item_a);
 
-				List<Service> serviceCandidates = new ArrayList<Service>();
-				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
+					indi_temp.serQueue.set(swap_a, item_b);
+					indi_temp.serQueue.set(swap_b, item_temp);
 
-					// deep clone may be not needed if no changes are applied to
-					// the pointed service
-					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
+					List<Service> serviceCandidates = new ArrayList<Service>();
+					for (int n = 0; n < indi_temp.serQueue.size(); n++) {
+
+						// deep clone may be not needed if no changes are applied to
+						// the pointed service
+						serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
+					}
+
+					// set the service candidates according to the sampling
+					InitialWSCPool.getServiceCandidates().clear();
+					InitialWSCPool.setServiceCandidates(serviceCandidates);
+
+					List<Integer> usedSerQueue = new ArrayList<Integer>();
+
+					ServiceGraph update_graph = graGenerator.generateGraphBySerQueue();
+
+					// evaluate the update_graph and calculate the fitness
+
+					// adjust the bias according to the valid solution from the
+					// service queue
+					List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
+					// set up the split index for the updated individual
+					indi_temp.setSplitPosition(usedQueue.size());
+
+					// add unused queue to form a complete a vector-based individual
+					List<Integer> serQueue = graGenerator.completeSerQueueIndi(usedQueue, indi_temp.serQueue);
+
+					// set the serQueue to the updatedIndividual
+					indi_temp.serQueue = serQueue;
+
+					// evaluate updated updated_graph
+					eval.aggregationAttribute(indi_temp, update_graph);
+					eval.calculateFitness(indi_temp);
+
+					// add
+					indi_neigbouring.add(indi_temp);
 				}
-
-				// set the service candidates according to the sampling
-				InitialWSCPool.getServiceCandidates().clear();
-				InitialWSCPool.setServiceCandidates(serviceCandidates);
-
-				List<Integer> usedSerQueue = new ArrayList<Integer>();
-
-				ServiceGraph update_graph = graGenerator.generateGraphBySerQueue();
-
-				// evaluate the update_graph and calculate the fitness
-
-				// adjust the bias according to the valid solution from the
-				// service queue
-				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
-				// set up the split index for the updated individual
-				indi_temp.setSplitPosition(usedQueue.size());
-
-				// add unused queue to form a complete a vector-based individual
-				List<Integer> serQueue = graGenerator.completeSerQueueIndi(usedQueue, indi_temp.serQueue);
-
-				// set the serQueue to the updatedIndividual
-				indi_temp.serQueue = serQueue;
-
-				// evaluate updated updated_graph
-				eval.aggregationAttribute(indi_temp, update_graph);
-				eval.calculateFitness(indi_temp);
-
-				// add
-				indi_neigbouring.add(indi_temp);
 			}
 
 			Collections.sort(indi_neigbouring);
