@@ -31,7 +31,7 @@ public class InitialWSCPool {
 	private final SemanticsPool semanticsPool;
 	private final List<Service> serviceSequence = new LinkedList<Service>();
 
-	private Map<Integer, List<Service>> layers = new HashMap<Integer, List<Service>>();
+	private static Map<Integer, List<Service>> layers = new HashMap<Integer, List<Service>>();
 
 	// a vector based representation
 	// public static Set<Service> usedSerQueue = new HashSet<Service>();
@@ -69,12 +69,13 @@ public class InitialWSCPool {
 		InitialWSCPool.serviceCandidates = serviceCandidates;
 	}
 
-	public Map<Integer, List<Service>> getLayers() {
+	
+	public static Map<Integer, List<Service>> getLayers() {
 		return layers;
 	}
 
-	public void setLayers(Map<Integer, List<Service>> layers) {
-		this.layers = layers;
+	public static void setLayers(Map<Integer, List<Service>> layers) {
+		InitialWSCPool.layers = layers;
 	}
 
 	/**

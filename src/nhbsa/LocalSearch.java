@@ -2,8 +2,10 @@ package nhbsa;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -18,7 +20,8 @@ import wsc.problem.WSCInitializer;
 
 public class LocalSearch {
 
-	// local search for random one-point swap for Top 1 and 5 from groups by fitness
+	// local search for random one-point swap for Top 1 and 5 from groups by
+	// fitness
 	// distribution with 20
 	// neighbors
 	public List<WSCIndividual> randomSwapOne5GroupByFit(List<WSCIndividual> population, Random random,
@@ -86,7 +89,9 @@ public class LocalSearch {
 				// obtain the split position of the individual
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -96,9 +101,11 @@ public class LocalSearch {
 
 				indi_temp.serQueue = serQueue_temp;
 
-				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
 
-				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between split(inclusive)
+				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
+																							// split(inclusive)
 																							// and
 																							// itemsize
 				// (exclusive)
@@ -113,7 +120,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -127,7 +135,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
@@ -159,7 +168,172 @@ public class LocalSearch {
 		return population;
 	}
 
-	// local search for random two-point swap for Top 1 and 5 from groups by fitness
+	// local search for random one-point swap for Top 1 and 5 from groups by
+	// fitness
+	// distribution with 20
+	// neighbors
+	public List<WSCIndividual> randomSwapOnefromLayers5GroupByFit(List<WSCIndividual> population, Random random,
+			WSCGraph graGenerator, WSCEvaluation eval) {
+		int split = 0;
+
+		Collections.sort(population);
+		List<WSCIndividual> solutions4LS = new ArrayList<WSCIndividual>();
+
+		// obtain individuals for selection
+		solutions4LS.add(population.get(0));
+
+		final double fitnessSize = (population.get(0).fitness - population.get(population.size() - 1).fitness) / 5;
+
+		List<WSCIndividual> partition1 = new ArrayList<WSCIndividual>();
+		List<WSCIndividual> partition2 = new ArrayList<WSCIndividual>();
+		List<WSCIndividual> partition3 = new ArrayList<WSCIndividual>();
+		List<WSCIndividual> partition4 = new ArrayList<WSCIndividual>();
+		List<WSCIndividual> partition5 = new ArrayList<WSCIndividual>();
+
+		for (int i = 0; i < population.size(); i++) {
+			WSCIndividual indi = population.get(i);
+			if (indi.getFitness() >= (population.get(0).fitness - fitnessSize)) {
+				partition1.add(population.get(i));
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 2)) {
+				partition2.add(population.get(i));
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 3)) {
+				partition3.add(population.get(i));
+			} else if (indi.getFitness() >= (population.get(0).fitness - fitnessSize * 4)) {
+				partition4.add(population.get(i));
+			} else {
+				partition5.add(population.get(i));
+			}
+		}
+
+		// need to fix the bug
+
+		if (partition1.size() != 0) {
+			solutions4LS.add(partition1.get(random.nextInt(partition1.size())));
+		}
+
+		if (partition2.size() != 0) {
+			solutions4LS.add(partition2.get(random.nextInt(partition2.size())));
+		}
+
+		if (partition3.size() != 0) {
+			solutions4LS.add(partition3.get(random.nextInt(partition3.size())));
+		}
+		if (partition4.size() != 0) {
+			solutions4LS.add(partition4.get(random.nextInt(partition4.size())));
+		}
+		if (partition5.size() != 0) {
+			solutions4LS.add(partition5.get(random.nextInt(partition5.size())));
+		}
+
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
+
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
+
+			split = indi.getSplitPosition();
+			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
+
+			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS5Group; nOfls++) {
+
+				// obtain the split position of the individual
+
+				WSCIndividual indi_temp = new WSCIndividual();
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+
+				// deep clone the services into a service queue for indi_temp
+				for (Integer ser : indi.serQueue) {
+					serQueue_temp.add(ser);
+
+				}
+
+				indi_temp.serQueue = serQueue_temp;
+
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
+				int swap_b = -1;
+				Integer item_b = -1;
+
+				Integer item_a = indi_temp.serQueue.get(swap_a);
+
+				// obtain unused service set
+				Set<Service> unused_ser = new HashSet<Service>();
+				for (int unused_index = split; unused_index < indi_temp.serQueue.size(); unused_index++) {
+					unused_ser.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(unused_index)));
+				}
+
+				// obtain service within the same layer of service of index
+				// swap_a
+				Service swap_ser_a = WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(swap_a));
+				for (List<Service> ser_lay : InitialWSCPool.getLayers().values()) {
+					if (ser_lay.contains(swap_ser_a)) {
+						List<Service> swap_b_list = Lists
+								.newArrayList(Sets.intersection(Sets.newHashSet(ser_lay), unused_ser));
+						Service swap_ser_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
+						item_b = WSCInitializer.serviceIndexBiMap.inverse().get(swap_ser_b.getServiceID());
+						swap_b = indi_temp.serQueue.indexOf(item_b);
+						break;
+					}
+				}
+
+				Integer item_temp = new Integer(item_a);
+
+				indi_temp.serQueue.set(swap_a, item_b);
+				indi_temp.serQueue.set(swap_b, item_temp);
+
+				List<Service> serviceCandidates = new ArrayList<Service>();
+				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
+
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
+					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
+				}
+
+				// set the service candidates according to the sampling
+				InitialWSCPool.getServiceCandidates().clear();
+				InitialWSCPool.setServiceCandidates(serviceCandidates);
+
+				List<Integer> usedSerQueue = new ArrayList<Integer>();
+
+				ServiceGraph update_graph = graGenerator.generateGraphBySerQueue();
+
+				// evaluate the update_graph and calculate the fitness
+
+				// adjust the bias according to the valid solution from the
+				// service queue
+				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
+				// set up the split index for the updated individual
+				indi_temp.setSplitPosition(usedQueue.size());
+
+				// add unused queue to form a complete a vector-based individual
+				List<Integer> serQueue = graGenerator.completeSerQueueIndi(usedQueue, indi_temp.serQueue);
+
+				// set the serQueue to the updatedIndividual
+				indi_temp.serQueue = serQueue;
+
+				// evaluate updated updated_graph
+				eval.aggregationAttribute(indi_temp, update_graph);
+				eval.calculateFitness(indi_temp);
+
+				// add
+				indi_neigbouring.add(indi_temp);
+			}
+
+			Collections.sort(indi_neigbouring);
+
+			// if the best of neighbour solutions is better than the parent
+
+			if (indi_neigbouring.get(0).fitness > indi.fitness) {
+				population.set(population.indexOf(indi), indi_neigbouring.get(0));
+			}
+
+		}
+
+		return population;
+	}
+
+	// local search for random two-point swap for Top 1 and 5 from groups by
+	// fitness
 	// distribution with 20
 	// neighbors
 	public List<WSCIndividual> randomSwapTwo5GroupByFit(List<WSCIndividual> population, Random random,
@@ -226,7 +400,9 @@ public class LocalSearch {
 			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS5Group; nOfls++) {
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -262,7 +438,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -276,7 +453,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
@@ -330,13 +508,24 @@ public class LocalSearch {
 					split = indi.getSplitPosition();
 
 					WSCIndividual indi_temp = new WSCIndividual();
-					List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-					List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-					List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-					List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-					List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
+					List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																			// Index
+																			// arrayList
+					List<Integer> chunk1_temp = new ArrayList<Integer>(); // service
+																			// Index
+																			// chunk1
+					List<Integer> chunk2_temp = new ArrayList<Integer>(); // service
+																			// Index
+																			// chunk2
+					List<Integer> chunk3_temp = new ArrayList<Integer>(); // service
+																			// Index
+																			// chunk3
+					List<Integer> chunk4_temp = new ArrayList<Integer>(); // service
+																			// Index
+																			// chunk4
 
-					// deep clone the services into a service queue for indi_temp
+					// deep clone the services into a service queue for
+					// indi_temp
 					for (Integer ser : indi.serQueue) {
 						serQueue_temp.add(ser);
 
@@ -346,7 +535,8 @@ public class LocalSearch {
 						System.out.println(split);
 					}
 
-					int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+					int swap_a = random.nextInt(split);// between 0 (inclusive)
+														// and split (exclusive)
 
 					int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
 																								// split(inclusive)
@@ -388,7 +578,8 @@ public class LocalSearch {
 					List<Service> serviceCandidates = new ArrayList<Service>();
 					for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-						// deep clone may be not needed if no changes are applied to the pointed service
+						// deep clone may be not needed if no changes are
+						// applied to the pointed service
 						serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 					}
 
@@ -402,12 +593,14 @@ public class LocalSearch {
 
 					// evaluate the update_graph and calculate the fitness
 
-					// adjust the bias according to the valid solution from the service queue
+					// adjust the bias according to the valid solution from the
+					// service queue
 					List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 					// set up the split index for the updated individual
 					indi_temp.setSplitPosition(usedQueue.size());
 
-					// add unused queue to form a complete a vector-based individual
+					// add unused queue to form a complete a vector-based
+					// individual
 					List<Integer> serQueue = graGenerator.completeSerQueueIndi(usedQueue, indi_temp.serQueue);
 
 					// set the serQueue to the updatedIndividual
@@ -455,11 +648,21 @@ public class LocalSearch {
 				split = indi.getSplitPosition();
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk1
+				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk2
+				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk3
+				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk4
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -471,7 +674,8 @@ public class LocalSearch {
 					System.out.println(split);
 				}
 
-				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
 
 				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
 																							// split(inclusive)
@@ -513,7 +717,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -527,7 +732,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
@@ -623,11 +829,21 @@ public class LocalSearch {
 				split = indi.getSplitPosition();
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk1
+				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk2
+				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk3
+				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk4
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -639,7 +855,8 @@ public class LocalSearch {
 					System.out.println(split);
 				}
 
-				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
 
 				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
 																							// split(inclusive)
@@ -681,7 +898,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -695,7 +913,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
@@ -798,11 +1017,21 @@ public class LocalSearch {
 				split = indi.getSplitPosition();
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk1
+				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk2
+				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk3
+				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk4
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -814,7 +1043,8 @@ public class LocalSearch {
 					System.out.println(split);
 				}
 
-				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
 
 				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
 																							// split(inclusive)
@@ -856,7 +1086,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -870,7 +1101,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
@@ -978,11 +1210,21 @@ public class LocalSearch {
 				split = indi.getSplitPosition();
 
 				WSCIndividual indi_temp = new WSCIndividual();
-				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service Index arrayList
-				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service Index chunk1
-				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service Index chunk2
-				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service Index chunk3
-				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service Index chunk4
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+				List<Integer> chunk1_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk1
+				List<Integer> chunk2_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk2
+				List<Integer> chunk3_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk3
+				List<Integer> chunk4_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// chunk4
 
 				// deep clone the services into a service queue for indi_temp
 				for (Integer ser : indi.serQueue) {
@@ -990,7 +1232,8 @@ public class LocalSearch {
 
 				}
 
-				// obtain last start positions for valid length for LS, position 0 is always
+				// obtain last start positions for valid length for LS, position
+				// 0 is always
 				// included
 				if (split >= adaptiveLength) {
 					lastPos = split - adaptiveLength;
@@ -998,13 +1241,15 @@ public class LocalSearch {
 
 				// obtain index 0 to lastPos for the startpos of a range
 
-				// random obtain the startpos from the range and generate parts for LS
+				// random obtain the startpos from the range and generate parts
+				// for LS
 
 				if (split == 0) {
 					System.out.println(split);
 				}
 
-				int swap_a = random.nextInt(split);// between 0 (inclusive) and split (exclusive)
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
 
 				int swap_b = split + random.nextInt(WSCInitializer.dimension_size - split);// between
 																							// split(inclusive)
@@ -1046,7 +1291,8 @@ public class LocalSearch {
 				List<Service> serviceCandidates = new ArrayList<Service>();
 				for (int n = 0; n < indi_temp.serQueue.size(); n++) {
 
-					// deep clone may be not needed if no changes are applied to the pointed service
+					// deep clone may be not needed if no changes are applied to
+					// the pointed service
 					serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
 				}
 
@@ -1060,7 +1306,8 @@ public class LocalSearch {
 
 				// evaluate the update_graph and calculate the fitness
 
-				// adjust the bias according to the valid solution from the service queue
+				// adjust the bias according to the valid solution from the
+				// service queue
 				List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
 				// set up the split index for the updated individual
 				indi_temp.setSplitPosition(usedQueue.size());
