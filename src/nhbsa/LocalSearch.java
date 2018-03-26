@@ -240,33 +240,37 @@ public class LocalSearch {
 				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
 																		// Index
 																		// arrayList
+				Set<Service> unused_ser = new HashSet<Service>();
 
 				// deep clone the services into a service queue for indi_temp
-				for (Integer ser : indi.serQueue) {
+				for (int index = 0; index < indi.serQueue.size(); index++) {
+					int ser = indi.serQueue.get(index);
 					serQueue_temp.add(ser);
-
+					// obtain unused service set
+					if (index >= split) {
+						unused_ser.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(index)));
+					}
 				}
 
 				indi_temp.serQueue = serQueue_temp;
 
 				int swap_a = random.nextInt(split);// between 0 (inclusive) and
 													// split (exclusive)
+				Integer item_a = indi_temp.serQueue.get(swap_a);
+
+				// initial swap_b for index of list, item_b for service index
 				int swap_b = -1;
 				Integer item_b = -1;
 
-				Integer item_a = indi_temp.serQueue.get(swap_a);
+				// obtain random selected service of index swap_a
+				Service swap_ser_a = WSCInitializer.Index2ServiceMap.get(serQueue_temp.get(swap_a));
 
-				// obtain unused service set
-				Set<Service> unused_ser = new HashSet<Service>();
-				for (int unused_index = split; unused_index < indi_temp.serQueue.size(); unused_index++) {
-					unused_ser.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(unused_index)));
-				}
+				// obtain services in the same layer of the selected service
 
-				// obtain service within the same layer of service of index
-				// swap_a
-				Service swap_ser_a = WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(swap_a));
 				for (List<Service> ser_lay : InitialWSCPool.getLayers().values()) {
 					if (ser_lay.contains(swap_ser_a)) {
+						// obtain an intersection of services in the layer and
+						// unused list
 						List<Service> swap_b_list = Lists
 								.newArrayList(Sets.intersection(Sets.newHashSet(ser_lay), unused_ser));
 						Service swap_ser_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
