@@ -79,6 +79,8 @@ public class WSCProblem {
 			// add a local search
 			LocalSearch ls = new LocalSearch();
 			// ls.swapChunk(population, WSCInitializer.random, graGenerator, eval);
+			// ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random,
+			// graGenerator, eval);
 			ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
 
 			// add a mutation

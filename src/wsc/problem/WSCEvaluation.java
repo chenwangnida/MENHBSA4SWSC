@@ -7,12 +7,14 @@ import java.util.Set;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.AllDirectedPaths;
+import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 import wsc.graph.ServiceEdge;
 
 public class WSCEvaluation {
 
-	public void aggregationAttribute(WSCIndividual individual, DirectedGraph<String, ServiceEdge> directedGraph) {
+	public void aggregationAttribute(WSCIndividual individual, DefaultDirectedWeightedGraph<String, ServiceEdge> directedGraph) {
 
 		double a = 1.0;
 		double r = 1.0;
@@ -37,7 +39,7 @@ public class WSCEvaluation {
 		}
 
 		// set time aggregation
-		t = getLongestPathVertexList(directedGraph, WSCInitializer.serviceQoSMap);
+		t = getLongestPathVertexListUsingBellmanFordShortestPath(directedGraph, WSCInitializer.serviceQoSMap);
 
 		// set mt,dst aggregation
 
@@ -123,31 +125,27 @@ public class WSCEvaluation {
 			return (WSCInitializer.MAXIMUM_COST - cost) / (WSCInitializer.MAXIMUM_COST - WSCInitializer.MINIMUM_COST);
 	}
 
-	public static double getLongestPathVertexList(DirectedGraph<String, ServiceEdge> g,
-			Map<String, double[]> serQoSMap) {
+	public double getLongestPathVertexListUsingBellmanFordShortestPath(
+			DefaultDirectedWeightedGraph<String, ServiceEdge> g, Map<String, double[]> serQoSMap) {
 		// A algorithm to find all paths
-		AllDirectedPaths<String, ServiceEdge> allPath = new AllDirectedPaths<String, ServiceEdge>(g);
-		List<GraphPath<String, ServiceEdge>> pathList = allPath.getAllPaths("startNode", "endNode", true, null);
-		double maxTime = 0;
-		double sumTime;
-
-		for (int i = 0; i < pathList.size(); i++) {
-
-			sumTime = 0;
-
-			// for (String v : Graphs.getPathVertexList(pathList.get(i))) {
-			for (String v : (pathList.get(i).getVertexList())) {
-				if (!v.equals("startNode") && !v.equals("endNode")) {
-					double qos[] = serQoSMap.get(v);
-					sumTime += qos[WSCInitializer.TIME];
+		for (String vertice : g.vertexSet()) {
+			if (!vertice.equals("startNode")) {
+				double responseTime = 0;
+				if (!vertice.equals("endNode")) {
+					responseTime = serQoSMap.get(vertice)[WSCInitializer.TIME];
+				} else {
+					responseTime = 0;
+				}
+				for (ServiceEdge edge : g.incomingEdgesOf(vertice)) {
+					// set it negative because we aim to find longest path
+					g.setEdgeWeight(edge, -responseTime);
 				}
 			}
-			if (sumTime > maxTime) {
-				maxTime = sumTime;
-			}
-
 		}
-		// return pathList.get(IndexPathLength).getEdgeList();
+
+		GraphPath<String, ServiceEdge> pathList = BellmanFordShortestPath.findPathBetween(g, "startNode", "endNode");
+		double maxTime = -pathList.getWeight();
 		return maxTime;
+
 	}
 }

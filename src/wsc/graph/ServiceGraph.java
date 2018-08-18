@@ -2,8 +2,9 @@ package wsc.graph;
 
 
 import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
-public class ServiceGraph extends DefaultDirectedGraph<String, ServiceEdge>{
+public class ServiceGraph extends DefaultDirectedWeightedGraph<String, ServiceEdge>{
 
 	public ServiceGraph(Class<? extends ServiceEdge> edgeClass) {
 		super(edgeClass);
