@@ -1,12 +1,9 @@
 package wsc.problem;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.GraphPath;
-import org.jgrapht.alg.shortestpath.AllDirectedPaths;
 import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 

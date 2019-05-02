@@ -9,7 +9,6 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.GraphIterator;
 
-import wsc.graph.GraphUtils;
 import wsc.graph.ServiceEdge;
 import wsc.graph.ServiceGraph;
 

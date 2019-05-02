@@ -2,13 +2,14 @@ package wsc.data.pool;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+
 import javax.xml.bind.JAXBException;
 
-import wsc.problem.WSCInitializer;
 import wsc.graph.ParamterConn;
 import wsc.owl.bean.OWLClass;
 import wsc.owl.bean.OWLInst;
 import wsc.owl.bean.RDF;
+import wsc.problem.WSCInitializer;
 
 public class SemanticsPool {
 

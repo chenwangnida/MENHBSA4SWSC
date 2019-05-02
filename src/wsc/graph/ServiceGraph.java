@@ -1,7 +1,6 @@
 package wsc.graph;
 
 
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 
 public class ServiceGraph extends DefaultDirectedWeightedGraph<String, ServiceEdge>{

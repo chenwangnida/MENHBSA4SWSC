@@ -18,10 +18,10 @@ import org.jgrapht.DirectedGraph;
 import wsc.data.pool.SWSPool;
 import wsc.data.pool.SemanticsPool;
 import wsc.data.pool.Service;
-import wsc.problem.WSCInitializer;
 import wsc.graph.ParamterConn;
 import wsc.graph.ServiceEdge;
 import wsc.graph.ServiceOutput;
+import wsc.problem.WSCInitializer;
 
 public class InitialWSCPool {
 
