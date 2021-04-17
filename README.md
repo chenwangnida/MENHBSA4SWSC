@@ -1,21 +1,22 @@
 # Title
-Source code of MEEDA algorithms
+Source code of MEEDA algorithms for semantic web service composition
 
 # Getting Started
-These instructions will get you a copy of the project up and running on your local machine.
+These instructions will get you a copy of the project and running on your local machine.
 
 # Prerequisites
 
 To run the source code of MEEDA, the following jar files need to be bult in the path of libarary.
-1. Java jar: JAVASE 1.8
-2. third party jars: Guava, Lang3, Math3, and JGraphT are provided in lib folder.
+1. Java jar: JAVA_SE 1.8
+2. Third party jars: Guava, Lang3, Math3, and JGraphT (these jars are provided in lib folder).
 
 # Run 
 
 **Main class** is located at /src/wsc/problem/WSCProblem.java
 
-1. Generate a runnable jar (e.g., with name MENHBSA4SWSC.jar) with all the jars provided in the lib folder. You can use jar command to create jar at the root of the file. JFI, it is relatively easiy to use build tools, such as ant to take care of that.
-2. To run the jar file by execute a command line with five pramarters. An example of command line to run a jar is `java -jar MENHBSA4SWSC.jar out.stat problem.xml service-out.XML taxonomy.owl 0 0`, where
+1. Download a copy of the project to your local computer.
+2. Generate a runnable jar (e.g., with name MENHBSA4SWSC.jar) with all the jars provided in the lib folder. You can use jar command to create jar at the root of the file. JFI, it is relatively easiy to use build tools, such as ant to take care of that.
+3. To run the jar file by execute a command line with five pramarters. An example of command line to run a jar is `java -jar MENHBSA4SWSC.jar out.stat problem.xml service-out.XML taxonomy.owl 0 0`, where
    - the first paramter: out.state is an output file.
    - the second parameter: problem.xml is a service composition task file from WSC dataset.
    - the third parameter: service-out.XML is a set of services file from WSC dataset. 
