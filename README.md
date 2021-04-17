@@ -1,5 +1,5 @@
 # Title
-Source code of MEEDA algorithms for semantic web service composition
+Source code of MEEDA algorithms for semantic web service composition.
 
 # Getting Started
 These instructions will get you a copy of the project and running on your local machine.
@@ -20,7 +20,7 @@ To run the source code of MEEDA, the following jar files need to be bult in the 
    - the first paramter: out.state is an output file.
    - the second parameter: problem.xml is a service composition task file from WSC dataset.
    - the third parameter: service-out.XML is a set of services file from WSC dataset. 
-   - the fourth paramter: taxonomy.owl is an ontology from WSC dataset.
+   - the fourth parameter: taxonomy.owl is an ontology from WSC dataset.
    - the fifth parameter: 0 is the seed number. We use 30 seeds from 0 to 29 in our experiment.
    - the sixth paramters: 
       - 0 refers to **MEEDA-LOP** 
