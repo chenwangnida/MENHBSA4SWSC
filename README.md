@@ -21,4 +21,8 @@ To run the source code of MEEDA, the following jar files need to be bult in the 
    - The third parameter: service-out.XML is a set of services file from WSC dataset. 
    - The fourth paramter: taxonomy.owl is an ontology from WSC dataset.
    - The fifth parameter: 0 is the seed number. We use 30 seeds from 0 to 29 in our experiment.
-   - The sixth paramters: 0 refers to MEEDA-LOP; 1 refers to MEEDA-OP, 2 refers to MEEDA-BP, 3 refers to MEEDA-
+   - The sixth paramters: 
+      - 0 refers to MEEDA-LOP 
+      - 1 refers to MEEDA-OP 
+      - 2 refers to MEEDA-TP 
+      - 3 refers to MEEDA-OB
