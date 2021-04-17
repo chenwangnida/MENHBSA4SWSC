@@ -4,9 +4,6 @@ Source code of MEEDA algorithm
 # Getting Started
 These instructions will get you a copy of the project up and running on your local machine.
 
-#Configuration of the arguments
--file gaInitial4robust.params
-
 # Prerequisites
 
 To run the source code of MEEDA, the following jar files need to be bult in the path of libarary.
