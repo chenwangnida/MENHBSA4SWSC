@@ -18,10 +18,16 @@ Main class is located at /src/wsc/problem/WSCProblem.java
 2. To run the jar file by execute with five pramarters:
 
 
-java -jar MENHBSA4SWSC out.stat problem.xml service-out.XML taxonomy.owl 0
+  `java -jar MENHBSA4SWSC out.stat problem.xml service-out.XML taxonomy.owl 0`
 
-out.state: output file
+  The first paramter: out.state is an output file.
 
-problem.xml service-out.XML taxonomy : three files of WSC dataset
+  The second parameter: problem.xml.
+  
+  The third parameter: service-out.XML taxonomy : three files of WSC dataset
 
-0 : seed number
+  
+  
+  0 : seed number
+
+  1: 
