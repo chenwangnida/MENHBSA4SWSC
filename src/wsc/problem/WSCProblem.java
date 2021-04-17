@@ -125,6 +125,8 @@ public class WSCProblem {
 
 			// add another half number of pop to population
 			population.addAll(archive);
+			System.out.print("archv:"+archive.size());
+
 
 			// update the population with pop_updated
 			for (int m = 0; m < pop_updated.size(); m++) {
@@ -173,6 +175,9 @@ public class WSCProblem {
 				// BestIndiSoFar4EvalStep(population);
 
 			}
+			
+			System.out.print("POP:"+population.size());
+
 			WSCInitializer.initTime.add(initialization);
 			initialization = (long) 0.0;
 			WSCInitializer.time.add(System.currentTimeMillis() - startTime);
