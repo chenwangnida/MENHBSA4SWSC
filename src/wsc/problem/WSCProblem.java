@@ -16,14 +16,14 @@ import wsc.graph.ServiceGraph;
 public class WSCProblem {
 	public static void main(String[] args) throws IOException {
 
-		if (args.length != 5) {
+		if (args.length != 6) {
 			System.out.println("missing arguments!");
 			return;
 		}
 
 		WSCInitializer.initialisationStartTime = System.currentTimeMillis();
 
-		WSCInitializer init = new WSCInitializer(args[0], args[1], args[2], args[3], Long.valueOf(args[4]));
+		WSCInitializer init = new WSCInitializer(args[0], args[1], args[2], args[3], Long.valueOf(args[4]), Integer.valueOf(args[5]));
 		WSCGraph graGenerator = new WSCGraph();
 		WSCEvaluation eval = new WSCEvaluation();
 
@@ -77,15 +77,29 @@ public class WSCProblem {
 
 			// add a local search
 			LocalSearch ls = new LocalSearch();
-			// ls.swapChunk(population, WSCInitializer.random, graGenerator, eval);
-			// ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random,
-			// graGenerator, eval);
-			ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			
+			
+			//Configure local search methods
+			if(WSCInitializer.ls_type == 0) {
+				//constrained layer-based one-point swap 
+				ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			}
+			
+			if(WSCInitializer.ls_type == 1) {
+				//constrained one-point swap
+				ls.randomSwapOne5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			}
 
-			// add a mutation
-			// Mutation mutatation = new Mutation();
-			// mutatation.swapOne(population, WSCInitializer.random, graGenerator, eval);
-			// mutatation.swapTwo(population, WSCInitializer.random, graGenerator, eval);
+			if(WSCInitializer.ls_type == 2) {
+				//constrained two-point swap
+				ls.randomSwapTwo5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			}
+			
+			if(WSCInitializer.ls_type == 3) {
+				//constrained one block swap
+				ls.swapChunk5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			}
+			
 
 			// sort the individuals according to the fitness
 			Collections.sort(population);

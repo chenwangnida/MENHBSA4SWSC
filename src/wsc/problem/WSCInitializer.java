@@ -49,6 +49,7 @@ public class WSCInitializer {
 	public static int numOfLS = 30; // the size of neighboring space
 	public static int numOfLS4Group = 18;
 	public static int numOfLS5Group = 20;
+	public static int ls_type = 0;
 
 	public static double Pm = 0.1; // probability of local search
 
@@ -122,11 +123,13 @@ public class WSCInitializer {
 	 *            taskFileName, serviceFileName, taxonomyFileName
 	 */
 	public WSCInitializer(String lName, String taskFileName, String serviceFileName, String taxonomyFileName,
-			long seed) {
+			long seed, int ls_param) {
 
 		initialisationStartTime = System.currentTimeMillis();
 		logName = lName;
 		random = new Random(seed);
+		
+		ls_type = ls_param;
 
 		try {
 			// register task
