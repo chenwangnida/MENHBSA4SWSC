@@ -9,8 +9,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 # Prerequisites
 
-Java jar: JAVASE 1.8
-third party jars: Guava, Lang3, Math3, and JGraphT are provided in lib folder.
+To run the source code of MEEDA, the following jar files need to be bult in the path of libarary.
+1. Java jar: JAVASE 1.8
+2. third party jars: Guava, Lang3, Math3, and JGraphT are provided in lib folder.
 
 # Run 
 
