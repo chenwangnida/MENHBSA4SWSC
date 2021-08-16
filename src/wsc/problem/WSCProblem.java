@@ -81,7 +81,7 @@ public class WSCProblem {
 			
 			//Configure local search methods
 			if(WSCInitializer.ls_type == 0) {
-				//constrained layer-based one-point swap 
+				//constrained layer-based one-point swap
 				ls.randomSwapOnefromLayers5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
 			}
 			
@@ -98,6 +98,11 @@ public class WSCProblem {
 			if(WSCInitializer.ls_type == 3) {
 				//constrained one block swap
 				ls.swapChunk5GroupByFit(population, WSCInitializer.random, graGenerator, eval);
+			}
+			
+			if(WSCInitializer.ls_type == 4) {
+				//constrained layer-based one-point swap on top 6 
+				ls.randomSwapOnefromTop6ByFit(population, WSCInitializer.random, graGenerator, eval);
 			}
 			
 
@@ -139,7 +144,7 @@ public class WSCProblem {
 
 			// add another half number of pop to population
 			population.addAll(archive);
-			System.out.print("archv:"+archive.size());
+			//System.out.print("archv:"+archive.size());
 
 
 			// update the population with pop_updated
@@ -190,7 +195,7 @@ public class WSCProblem {
 
 			}
 			
-			System.out.print("POP:"+population.size());
+			//System.out.print("POP:"+population.size());
 
 			WSCInitializer.initTime.add(initialization);
 			initialization = (long) 0.0;

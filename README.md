@@ -19,7 +19,7 @@ To run the source code of MEEDA, the following jar files need to be bult in the 
 3. To run the jar file by execute a command line with five pramarters. An example of command line to run a jar is `java -jar MENHBSA4SWSC.jar out.stat problem.xml service-out.XML taxonomy.owl 0 0`, where
    - the first paramter: out.state is an output file.
    - the second parameter: problem.xml is a service composition task file from WSC dataset.
-   - the third parameter: service-out.XML is a set of services file from WSC dataset. 
+   - the third parameter: service-output.XML is a set of services file from WSC dataset. 
    - the fourth parameter: taxonomy.owl is an ontology from WSC dataset.
    - the fifth parameter: 0 is the seed number. We use 30 seeds from 0 to 29 in our experiment.
    - the sixth paramters: 

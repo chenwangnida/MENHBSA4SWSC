@@ -167,7 +167,138 @@ public class LocalSearch {
 
 		return population;
 	}
+ 
+	public List<WSCIndividual> randomSwapOnefromTop6ByFit(List<WSCIndividual> population, Random random,
+			WSCGraph graGenerator, WSCEvaluation eval) {
+		int split = 0;
 
+		Collections.sort(population);
+		List<WSCIndividual> solutions4LS = new ArrayList<WSCIndividual>();
+
+		// obtain individuals for selection
+		solutions4LS.add(population.get(0));
+		solutions4LS.add(population.get(1));
+		solutions4LS.add(population.get(2));
+		solutions4LS.add(population.get(3));
+		solutions4LS.add(population.get(4));
+		solutions4LS.add(population.get(5));
+
+
+		List<WSCIndividual> solutions4LSWithoutDuplicates = Lists.newArrayList(Sets.newHashSet(solutions4LS));
+
+		for (WSCIndividual indi : solutions4LSWithoutDuplicates) {
+
+			split = indi.getSplitPosition();
+			List<WSCIndividual> indi_neigbouring = new ArrayList<WSCIndividual>();
+
+			for (int nOfls = 0; nOfls < WSCInitializer.numOfLS5Group; nOfls++) {
+
+				// obtain the split position of the individual
+
+				WSCIndividual indi_temp = new WSCIndividual();
+				List<Integer> serQueue_temp = new ArrayList<Integer>(); // service
+																		// Index
+																		// arrayList
+				Set<Integer> unused_ser = new HashSet<Integer>();
+
+				// deep clone the services into a service queue for indi_temp
+				for (int index = 0; index < indi.serQueue.size(); index++) {
+					int ser = indi.serQueue.get(index);
+					serQueue_temp.add(ser);
+					// obtain unused service set
+					if (index >= split) {
+						unused_ser.add(indi.serQueue.get(index));
+					}
+				}
+
+				indi_temp.serQueue = serQueue_temp;
+
+				int swap_a = random.nextInt(split);// between 0 (inclusive) and
+													// split (exclusive)
+				Integer item_a = indi_temp.serQueue.get(swap_a);
+
+				// initial swap_b for index of list, item_b for service index
+				int swap_b = -1;
+				Integer item_b = -1;
+				int continue4Swap = 0;
+
+				// obtain services in the same layer of the selected service
+
+				for (List<Integer> ser_lay : WSCInitializer.layers4SerIndex.values()) {
+					if (ser_lay.contains(item_a)) {
+						// obtain an intersection of services in the layer and
+						// unused list
+						List<Integer> swap_b_list = Lists
+								.newArrayList(Sets.intersection(Sets.newHashSet(ser_lay), unused_ser));
+						if (swap_b_list.size() > 0) {
+							continue4Swap = 1;
+							item_b = swap_b_list.get(random.nextInt(swap_b_list.size()));
+							swap_b = indi_temp.serQueue.indexOf(item_b);
+						}
+						break;
+					}
+				}
+
+				if (continue4Swap == 1) {
+
+					Integer item_temp = new Integer(item_a);
+
+					indi_temp.serQueue.set(swap_a, item_b);
+					indi_temp.serQueue.set(swap_b, item_temp);
+
+					List<Service> serviceCandidates = new ArrayList<Service>();
+					for (int n = 0; n < indi_temp.serQueue.size(); n++) {
+
+						// deep clone may be not needed if no changes are applied to
+						// the pointed service
+						serviceCandidates.add(WSCInitializer.Index2ServiceMap.get(indi_temp.serQueue.get(n)));
+					}
+
+					// set the service candidates according to the sampling
+					InitialWSCPool.getServiceCandidates().clear();
+					InitialWSCPool.setServiceCandidates(serviceCandidates);
+
+					List<Integer> usedSerQueue = new ArrayList<Integer>();
+
+					ServiceGraph update_graph = graGenerator.generateGraphBySerQueue();
+
+					// evaluate the update_graph and calculate the fitness
+
+					// adjust the bias according to the valid solution from the
+					// service queue
+					List<Integer> usedQueue = graGenerator.usedQueueofLayers("startNode", update_graph, usedSerQueue);
+					// set up the split index for the updated individual
+					indi_temp.setSplitPosition(usedQueue.size());
+
+					// add unused queue to form a complete a vector-based individual
+					List<Integer> serQueue = graGenerator.completeSerQueueIndi(usedQueue, indi_temp.serQueue);
+
+					// set the serQueue to the updatedIndividual
+					indi_temp.serQueue = serQueue;
+
+					// evaluate updated updated_graph
+					eval.aggregationAttribute(indi_temp, update_graph);
+					eval.calculateFitness(indi_temp);
+
+					// add
+					indi_neigbouring.add(indi_temp);
+				}
+			}
+
+			Collections.sort(indi_neigbouring);
+
+			// if the best of neighbour solutions is better than the parent
+
+			if (indi_neigbouring.get(0).fitness > indi.fitness) {
+				population.set(population.indexOf(indi), indi_neigbouring.get(0));
+			}
+
+		}
+
+		return population;
+	}
+	
+	
 	// local search for random one-point swap for Top 1 and 5 from groups by
 	// fitness
 	// distribution with 20
