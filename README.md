@@ -15,18 +15,25 @@ To run the source code of MEEDA, the following jar files need to be built in the
 
 1. We have generated and uploaded a runnable jar (i.e, a MENHBSA4SWSC.jar file) in our code repository.
 
-2. To run MENHBSA4SWSC.jar via terminals, please use the following command line with five parameters: `java -jar MENHBSA4SWSC.jar out.stat problem.xml service-output.xml taxonomy.owl 0 0`. (Note that a full path of problem.xml service-output.xml and taxonomy.owl files must be given in the command line, you can download the dataset files from https://github.com/chenwangnida/Dataset).
+2. To run MENHBSA4SWSC.jar via terminals, please use the following command line with five parameters: `java -jar MENHBSA4SWSC.jar out.stat problem.xml service-output.xml taxonomy.owl 0 0`. (Note that full paths of problem.xml service-output.xml and taxonomy.owl files must be given in the command line, you can download the dataset files from https://github.com/chenwangnida/Dataset).
 
-   - the first parameter: out.state is a path of an output file.
-   - the second parameter: problem.xml is a path of a composition task file.
-   - the third parameter: service-output.xml is a path of web services file.
-   - the fourth parameter: taxonomy.owl is is a path of an ontology file. 
-   - the fifth parameter: 0 is a seed number.
-   - the sixth parameter: 
+   	- the first parameter: out.stat is a path of an output file.
+   	
+   	- the second parameter: problem.xml is a path of a composition task file.
+   	
+   	- the third parameter: service-output.xml is a path of web services file.
+   	
+   	- the fourth parameter: taxonomy.owl is is a path of an ontology file.
+   	
+   	- the fifth parameter: 0 is a seed number.
+   	
+   	- the sixth parameter: 
       - 0 refers to **MEEDA-LOP** 
       - 1 refers to **MEEDA-OP** 
       - 2 refers to **MEEDA-TP** 
-      - 3 refers to **MEEDA-OB**
+      - 3 refers to **MEEDA-OB** 
+
+3. The output file, out.stat, records 100 rows (i.e., the number of generations) of space-separated values. For example, one row of values (0 1974 4416 0.551528) represents that generation counter is 0, initialization time is 1974ms, computation time of generation 0 is 4416ms, the best fitness found up to generation 0 is 0.551528). In addition, the last row of out.stat records the best composite service found by our algorithm (e.g., ).
 
 
 ## An Video Example for Running MEEDA algorithms 
