@@ -33,12 +33,12 @@ To run the source code of MEEDA, the following jar files need to be built in the
       - 2 refers to **MEEDA-TP** 
       - 3 refers to **MEEDA-OB** 
 
-3. The output file, out.stat, records 100 rows (i.e., the number of generations) of space-separated values. For example, one row of values (0 1974 4416 0.551528) represents that generation counter is 0, initialization time is 1974ms, computation time of generation 0 is 4416ms, the best fitness found so far is 0.551528). In addition, the last row of out.stat records the best composite service found by our algorithm. This composite service is described in a simple text language using Graphviz (please refer the link https://graphviz.org for more details on Graphivz).
+3. The output file, out.stat, records 100 rows (i.e., the number of generations) of space-separated values. For example, one row of values (0 1974 4416 0.551528) represents that generation counter is 0, initialization time is 1974ms, computation time of generation 0 is 4416ms, the best fitness found so far is 0.551528). In addition, the last row of out.stat records the best composite service found by our algorithm. This composite service is described in a simple text language using Graphviz as below(please refer the link https://graphviz.org for more details on Graphivz).
 
 `digraph g {startNode->serv1900589909_1; startNode->serv1277338356; serv1900589909_1->serv2108886608_1; serv1277338356->serv2108886608_1; serv1900589909_1->serv2039454375; serv1277338356->serv2039454375; serv2039454375->serv1346770589_1; serv1346770589_1->serv30835212_1; serv2108886608_1->serv30835212_1; serv1346770589_1->serv100267445; serv2108886608_1->serv100267445; serv100267445->serv1555067288; serv30835212_1->serv862383464_1; serv1555067288->serv862383464_1; serv862383464_1->serv1624499521; serv30835212_1->serv1624499521; serv862383464_1->serv308564144_1; serv30835212_1->serv308564144_1; serv862383464_1->serv239131911; serv30835212_1->serv239131911; serv1624499521->serv1832796220; serv239131911->serv1832796220; serv308564144_1->serv1832796220; serv1624499521->serv1140112396; serv239131911->serv1140112396; serv308564144_1->serv1140112396; serv1624499521->serv447428610; serv239131911->serv447428610; serv308564144_1->serv447428610; serv1624499521->serv1209544629; serv239131911->serv1209544629; serv308564144_1->serv1209544629; serv1624499521->serv377996377; serv239131911->serv377996377; serv308564144_1->serv377996377; serv1140112396->serv1348409095_1; serv1832796220->serv1348409095_1; serv377996377->serv1348409095_1; serv447428610->serv1348409095_1; serv1209544629->serv1348409095_1; serv1140112396->serv2041092919; serv1832796220->serv2041092919; serv377996377->serv2041092919; serv447428610->serv2041092919; serv1209544629->serv2041092919; serv1140112396->serv586293076; serv1832796220->serv586293076; serv377996377->serv586293076; serv447428610->serv586293076; serv1209544629->serv586293076; serv1348409095_1->endNode; serv2041092919->endNode; serv586293076->endNode; }`
 
 
-To generate a graph in a png format, firstly save the above description in a dot file (e.g., namely, dag.dot), and use the following command line to a composition graph as shown in Figure below.
+To generate a graph in a png format, please save the above description in a dot file (e.g., namely, dag.dot), and then use the following command line to generate a composition graph as shown in Figure below.
 
 `dot -Tpng dag.dot  -o dag.png`
 
@@ -52,9 +52,9 @@ https://user-images.githubusercontent.com/20468313/129655225-f214f0a1-4147-408a-
 
 The command lines used in the video are listed and explained below:
 
-1. `git clone https://github.com/chenwangnida/MENHBSA4SWSC.git`: Download our code repository to local PC (i.e, Save it to Desktop directory in the video).
+1. `git clone https://github.com/chenwangnida/MENHBSA4SWSC.git`: Download our code repository to local PC (i.e, Save it to Desktop directory, as shown in the video).
 
-2. `git clone https://github.com/chenwangnida/Dataset.git`: Download WSC dataset to local PC (i.e, Save it to Desktop directory in the video).
+2. `git clone https://github.com/chenwangnida/Dataset.git`: Download WSC dataset to local PC (i.e, Save it to Desktop directory, as shown in the video).
 
 3. `mv ~/Desktop/MENHBSA4SWSC/exportedJar/MENHBSA4SWSC.jar ~/Desktop`: Move the runnable jar to the Desktop directory.
 
@@ -64,7 +64,7 @@ The command lines used in the video are listed and explained below:
 
 6. `/usr/libexec/java_home -V`: Check all the installed JDK versions in the local PC.
 
-7. `export JAVA_HOME="/usr/libexec/java_home -v 1.8"`: Let us load JDK version 1.8
+7. `export JAVA_HOME="/usr/libexec/java_home -v 1.8"`: Load JDK version 1.8
 
 8. `java -version`: Double check whether we have loaded the right JDK.
 
